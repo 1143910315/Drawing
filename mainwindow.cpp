@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QVariant>
+#include "voidmodel.h"
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
@@ -10,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	//QString str="在我右边";
 	QStringList current_cloud_id_list;
 	//current_cloud_id_list.push_back(str);
-	model = new QStringListModel(this);
-	model->setStringList(current_cloud_id_list);
+	model = new PaintingListModel();
+	model->insertData(0,new VoidModel());
 	ui->listView->setModel(model);
 }
 
@@ -22,11 +23,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-
+	model->insertData(0,new VoidModel());
+	/*
 	int rowCount=model->rowCount();
 	model->insertRow(rowCount);
 	model->setData(model->index(rowCount),ui->lineEdit->text());
-/*
+*/
+	/*
 	QStringListModel *model=(QStringListModel *)ui->listView->model();
 	QStringList string_list=model->stringList();
 	string_list.push_back(ui->lineEdit->text());
@@ -37,8 +40,12 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
 	int index=ui->lineEdit_2->text().toInt();
+	model->removeData(index);
+	/*
+	int index=ui->lineEdit_2->text().toInt();
 	model->removeRows(index,1);
-/*
+*/
+	/*
 	QStringListModel *model=(QStringListModel *)ui->listView->model();
 	QStringList string_list=model->stringList();
 	int index=ui->lineEdit_2->text().toInt();

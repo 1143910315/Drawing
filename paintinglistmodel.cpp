@@ -48,12 +48,16 @@ Qt::ItemFlags PaintingListModel::flags(const QModelIndex &index) const
 
 void PaintingListModel::insertData(int index, PaintingModel *data)
 {
+	beginInsertRows(QModelIndex(), index, index);
 	list.insert(index,data);
+	endInsertRows();
 }
 
 void PaintingListModel::removeData(int index)
 {
+	beginRemoveRows(QModelIndex(),index,index);
 	list.removeAt(index);
+	endRemoveRows();
 }
 
 PaintingModel *PaintingListModel::getData(int index)
