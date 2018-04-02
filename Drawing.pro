@@ -26,11 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    paintinglistmodel.cpp
+    paintinglistmodel.cpp \
+    voidmodel.cpp
 
 HEADERS += \
         mainwindow.h \
-    paintinglistmodel.h
+    paintinglistmodel.h \
+    paintingmodel.h \
+    voidmodel.h
 
 FORMS += \
         mainwindow.ui
