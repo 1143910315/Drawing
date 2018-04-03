@@ -33,6 +33,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="pushButton_4">
+          <property name="text">
+           <string>添加矩形</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLineEdit" name="lineEdit">
           <property name="toolTip">
            <string>欲被添加的文本</string>

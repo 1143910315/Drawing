@@ -28,14 +28,16 @@ SOURCES += \
         mainwindow.cpp \
     paintinglistmodel.cpp \
     voidmodel.cpp \
-    graphicsview.cpp
+    graphicsview.cpp \
+    rectmodel.cpp
 
 HEADERS += \
         mainwindow.h \
     paintinglistmodel.h \
     paintingmodel.h \
     voidmodel.h \
-    graphicsview.h
+    graphicsview.h \
+    rectmodel.h
 
 FORMS += \
         mainwindow.ui

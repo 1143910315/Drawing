@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include "rectmodel.h"
 #include "paintinglistmodel.h"
 namespace Ui {
 class MainWindow;
@@ -21,10 +23,16 @@ private slots:
 	void on_pushButton_clicked();
 	void on_pushButton_2_clicked();
 
+	void on_pushButton_3_clicked();
+
+	void on_pushButton_4_clicked();
+
 private:
 	Ui::MainWindow *ui;
 	PaintingListModel *model;
-
+	QGraphicsScene graphicsScene;
+	RectModel* confine;
+	//QGraphicsItem confine;
 };
 
 #endif // MAINWINDOW_H
