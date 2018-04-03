@@ -14,13 +14,17 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
+protected:
+	//void mouseMoveEvent(QMouseEvent *event);
 private slots:
+	void receiveMouseMove(QMouseEvent *event);
 	void on_pushButton_clicked();
 	void on_pushButton_2_clicked();
 
 private:
 	Ui::MainWindow *ui;
 	PaintingListModel *model;
+
 };
 
 #endif // MAINWINDOW_H
