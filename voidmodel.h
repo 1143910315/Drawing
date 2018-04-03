@@ -11,6 +11,7 @@ public:
 	QString getDescription();
 	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+	QStringList getData();
 };
 
 #endif // VOIDMODEL_H

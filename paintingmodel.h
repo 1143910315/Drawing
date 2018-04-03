@@ -4,6 +4,7 @@
 #include <QString>
 #include <QGraphicsItem>
 #include <QPainter>
+#include <QStringList>
 class PaintingModel : public QGraphicsItem
 {
 public:
@@ -11,6 +12,7 @@ public:
 	//0：无图案（voidmodel）
 	//1：矩形（rectmodel）
 	virtual QString getDescription()=0; //获得图案描述
+	virtual QStringList getData()=0;
 };
 
 #endif // PAINTINGMODEL_H

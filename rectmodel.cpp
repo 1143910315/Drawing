@@ -12,7 +12,7 @@ int RectModel::getType()
 
 QString RectModel::getDescription()
 {
-	return QString::asprintf("矩形：(%0.2f,%0.2f,%0.2f,%0.2f)",x,y,w,h);
+	return QString::asprintf("矩形：( %0.1f, %0.1f, %0.1f, %0.1f )",x,y,w,h);
 }
 
 QRectF RectModel::boundingRect() const
@@ -27,4 +27,14 @@ void RectModel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	//消除警告
 	(void)option;
 	(void)widget;
+}
+
+QStringList RectModel::getData()
+{
+	QStringList list;
+	list.append(QString::asprintf("A( %0.1f, %0.1f )",x,y));
+	list.append(QString::asprintf("B( %0.1f, %0.1f )",x+w,y));
+	list.append(QString::asprintf("C( %0.1f, %0.1f )",x+w,y+h));
+	list.append(QString::asprintf("D( %0.1f, %0.1f )",x,y+h));
+	return list;
 }

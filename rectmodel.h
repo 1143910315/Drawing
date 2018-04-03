@@ -11,11 +11,15 @@ public:
 	QString getDescription();
 	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+	QStringList getData();
 private:
 	qreal x=0;
 	qreal y=0;
 	qreal w=0;
 	qreal h=0;
+
+
+
 };
 
 #endif // RECTMODEL_H

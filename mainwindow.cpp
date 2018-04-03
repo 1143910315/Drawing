@@ -2,8 +2,10 @@
 #include "ui_mainwindow.h"
 
 #include <QVariant>
+#include <QItemSelectionModel>
 #include "voidmodel.h"
-//#include <qdebug.h>
+#include <qdebug.h>
+
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
@@ -15,6 +17,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	model = new PaintingListModel();
 	model->insertData(0,new VoidModel());
 	ui->listView->setModel(model);
+	//connect(ui->listView->selectionMode(),SIGNAL(s));
+	//ui->listView_2->setSelectionMode();
+	//ui->listView->setSelectionModel(new QItemSelectionModel());
+	//ui->listView_2->setSelectionModel(new QItemSelectionModel());
+	//connect(ui->listView,SIGNAL());
+
+
+	ui->listView_2->setModel(new QStringListModel());
 	ui->statusBar->showMessage("横坐标:0  纵坐标:0  缩放:1  宽度:0  高度:0  鼠标横坐标:0  鼠标纵坐标:0");
 	ui->graphicsView->setScene(&graphicsScene);
 	graphicsScene.setSceneRect(-1,-1,201,201);
@@ -25,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->centralWidget->setMouseTracking(true);
 	ui->graphicsView->setMouseTracking(true);
 	QObject::connect(ui->graphicsView,SIGNAL(mouserMove(QMouseEvent*)),this,SLOT(receiveMouseMove(QMouseEvent*)));
+
+
 }
 
 MainWindow::~MainWindow()
@@ -101,4 +113,91 @@ void MainWindow::on_pushButton_4_clicked()
 	RectModel* rectmodel=new RectModel(0,0,50,50);
 	graphicsScene.addItem(rectmodel);
 	model->insertData(model->rowCount(),rectmodel);
+	//ui->listWidget->insertItem(1,QList);
 }
+
+
+
+/*void MainWindow::on_listView_indexesMoved(const QModelIndexList &indexes)
+{
+	qDebug("Test3");
+	int row=indexes.first().row();
+	PaintingModel* p=model->getData(row);
+	QStringListModel * m=(QStringListModel*)ui->listView_2->model();
+	m->setStringList(p->getData());
+}
+*/
+/*
+void MainWindow::on_listView_clicked(const QModelIndex &index)
+{
+	qDebug("Test4");
+	int row=index.row();
+	PaintingModel* p=model->getData(row);
+	QStringListModel * m=(QStringListModel*)ui->listView_2->model();
+	m->setStringList(p->getData());
+}
+*/
+
+void MainWindow::on_listView_indexesMoved(const QModelIndexList &indexes)
+{
+	/*
+	QString string;
+	for(int i=0;i<indexes.count();i++){
+		string.append(QString::number(indexes.at(i).row())+"  ");
+	}
+	char*  ch;
+	QByteArray ba = string.toLatin1(); // must
+	ch=ba.data();
+	qDebug(ch);
+	*/
+
+	/*
+	QString string;
+	string.append("debug4   ");
+	QModelIndexList list=ui->listView->selectionModel()->selectedIndexes();
+	for(int i=0;i<list.count();i++){
+		string.append(QString::number(list.at(i).row())+"  ");
+	}
+	char*  ch;
+	QByteArray ba = string.toLatin1(); // must
+	ch=ba.data();
+	qDebug(ch);
+	*/
+
+	if(indexes.isEmpty()==false){
+		int row=indexes.first().row();
+		PaintingModel* p=model->getData(row);
+		QStringListModel * m=(QStringListModel*)ui->listView_2->model();
+		m->setStringList(p->getData());
+	}
+}
+
+/*
+void MainWindow::on_listView_2_indexesMoved(const QModelIndexList &indexes)
+{
+	qDebug("Test6");
+}
+*/
+/*
+void MainWindow::on_listView_pressed(const QModelIndex &index)
+{
+	//qDebug("Test5");
+	int row=index.row();
+	PaintingModel* p=model->getData(row);
+	QStringListModel * m=(QStringListModel*)ui->listView_2->model();
+	m->setStringList(p->getData());
+}
+*/
+/*
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+	qDebug("Test8");
+}
+*/
+/*
+void MainWindow::on_listWidget_currentRowChanged(int currentRow)
+{
+	qDebug("Test7");
+}
+*/
+

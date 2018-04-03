@@ -29,7 +29,8 @@ SOURCES += \
     paintinglistmodel.cpp \
     voidmodel.cpp \
     graphicsview.cpp \
-    rectmodel.cpp
+    rectmodel.cpp \
+    selectablelistview.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -37,7 +38,8 @@ HEADERS += \
     paintingmodel.h \
     voidmodel.h \
     graphicsview.h \
-    rectmodel.h
+    rectmodel.h \
+    selectablelistview.h
 
 FORMS += \
         mainwindow.ui

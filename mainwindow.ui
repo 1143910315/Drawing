@@ -21,7 +21,18 @@
        <widget class="GraphicsView" name="graphicsView"/>
       </item>
       <item>
-       <widget class="QListView" name="listView"/>
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="3,1">
+        <item>
+         <widget class="SelectableListView" name="listView">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListView" name="listView_2"/>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -105,6 +116,11 @@
    <class>GraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>graphicsview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SelectableListView</class>
+   <extends>QListView</extends>
+   <header location="global">selectablelistview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

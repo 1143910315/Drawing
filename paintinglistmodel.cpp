@@ -41,8 +41,9 @@ Qt::ItemFlags PaintingListModel::flags(const QModelIndex &index) const
 		return Qt::ItemIsEnabled;
 	return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 */
-	if(!index.isValid())
+	if(!index.isValid()){
 		return Qt::ItemIsEnabled;
+	}
 	return QAbstractListModel::flags(index) | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 

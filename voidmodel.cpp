@@ -27,3 +27,8 @@ void VoidModel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	(void)option;
 	(void)widget;
 }
+
+QStringList VoidModel::getData()
+{
+	return QStringList();
+}
