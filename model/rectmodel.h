@@ -8,6 +8,7 @@ class RectModel : public PaintingModel
 	Q_OBJECT
 public:
 	RectModel(qreal x,qreal y,qreal w,qreal h);
+	~RectModel();
 	int getType();
 	QString getDescription();
 	QRectF boundingRect() const;

@@ -138,12 +138,12 @@
   <customwidget>
    <class>GraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>graphicsview.h</header>
+   <header>customView/graphicsview.h</header>
   </customwidget>
   <customwidget>
    <class>SelectableListView</class>
    <extends>QListView</extends>
-   <header location="global">selectablelistview.h</header>
+   <header location="global">customView/selectablelistview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

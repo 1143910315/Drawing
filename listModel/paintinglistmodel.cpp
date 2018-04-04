@@ -49,22 +49,41 @@ Qt::ItemFlags PaintingListModel::flags(const QModelIndex &index) const
 
 void PaintingListModel::insertData(int index, PaintingModel *data)
 {
+	int type=data->getType();
+	if(type==2){
+		globalModel=(GlobalModel *)data;
+	}
 	beginInsertRows(QModelIndex(), index, index);
-	list.insert(index,data);
-	connect(data,SIGNAL(updateData(PaintingModel*)),this,SLOT(updateData(PaintingModel*)));
+	if(globalModel!=NULL){
+		globalModel->addItem(data);
+		list.insert(index,data);
+		connect(data,SIGNAL(updateData(PaintingModel*)),this,SLOT(updateData(PaintingModel*)));
+	}
 	endInsertRows();
 }
 
 void PaintingListModel::removeData(int index)
 {
 	beginRemoveRows(QModelIndex(),index,index);
+	PaintingModel *m=list.at(index);
+	globalModel->removeItem(m);//TODO !多屏幕情况下，可能会有泄漏
 	list.removeAt(index);
+	delete m;
 	endRemoveRows();
 }
 
 PaintingModel *PaintingListModel::getData(int index)
 {
 	return list.at(index);
+}
+
+bool PaintingListModel::getSceneRect(qreal &x, qreal &y, qreal &w, qreal &h)
+{
+	if(globalModel!=NULL){
+		globalModel->getSceneRect(x,y,w,h);
+		return true;
+	}
+	return false;
 }
 
 void PaintingListModel::updateData(PaintingModel *paintingModel)

@@ -2,7 +2,7 @@
 #define GRAPHICSVIEW_H
 
 #include <QGraphicsView>
-
+#include <QWheelEvent>
 class GraphicsView : public QGraphicsView
 {
 	Q_OBJECT
@@ -13,10 +13,11 @@ public:
 	~GraphicsView();
 signals:
 	void mouserMove(QMouseEvent *event);
+	void graphicsViewChangeScale();
 
-	// QWidget interface
 protected:
 	void mouseMoveEvent(QMouseEvent *event);
+	void wheelEvent(QWheelEvent *event);
 };
 
 #endif // GRAPHICSVIEW_H

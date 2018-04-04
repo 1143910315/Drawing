@@ -6,6 +6,12 @@ RectModel::RectModel(qreal x, qreal y, qreal w, qreal h):x(x),y(y),w(w),h(h),max
 
 }
 
+RectModel::~RectModel()
+{
+	w=h=0;
+	emit update();
+}
+
 int RectModel::getType()
 {
 	return 1;//矩形
@@ -24,6 +30,9 @@ QRectF RectModel::boundingRect() const
 
 void RectModel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+	if(w==0 && h==0){
+		return ;
+	}
 	painter->drawRect(QRectF(x,y,w,h));
 	maxX=x;
 	maxY=y;
@@ -37,10 +46,12 @@ void RectModel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 QStringList RectModel::getData()
 {
 	QStringList list;
-	list.append(QString::asprintf("A( %0.1f, %0.1f )",x,y));
-	list.append(QString::asprintf("B( %0.1f, %0.1f )",x+w,y));
-	list.append(QString::asprintf("C( %0.1f, %0.1f )",x+w,y+h));
-	list.append(QString::asprintf("D( %0.1f, %0.1f )",x,y+h));
+	list.append(tr("A( %0, %1 )").arg(x,0,'f',1).arg(y,0,'f',1));
+	list.append(tr("B( %0, %1 )").arg(x+w-1,0,'f',1).arg(y,0,'f',1));
+	list.append(tr("C( %0, %1 )").arg(x+w-1,0,'f',1).arg(y+h-1,0,'f',1));
+	list.append(tr("D( %0, %1 )").arg(x,0,'f',1).arg(y+h-1,0,'f',1));
+	list.append(tr("宽度( %0 )").arg(w,0,'f',1));
+	list.append(tr("高度( %0 )").arg(h,0,'f',1));
 	return list;
 }
 
@@ -64,6 +75,12 @@ QStringList RectModel::getAttribute(int dataIndex)
 		list.append(tr("横坐标"));
 		list.append(tr("纵坐标"));
 		break;
+	case 4:
+		list.append(tr("宽度"));
+		break;
+	case 5:
+		list.append(tr("高度"));
+		break;
 	default:
 		break;
 	}
@@ -79,16 +96,22 @@ QStringList RectModel::getValue(int dataIndex)
 		list.append(QString::asprintf("%f",y));
 		break;
 	case 1:
-		list.append(QString::asprintf("%f",x+w));
+		list.append(QString::asprintf("%f",x+w-1));
 		list.append(QString::asprintf("%f",y));
 		break;
 	case 2:
-		list.append(QString::asprintf("%f",x+w));
-		list.append(QString::asprintf("%f",y+h));
+		list.append(QString::asprintf("%f",x+w-1));
+		list.append(QString::asprintf("%f",y+h-1));
 		break;
 	case 3:
 		list.append(QString::asprintf("%f",x));
-		list.append(QString::asprintf("%f",y+h));
+		list.append(QString::asprintf("%f",y+h-1));
+		break;
+	case 4:
+		list.append(QString::asprintf("%f",w));
+		break;
+	case 5:
+		list.append(QString::asprintf("%f",h));
 		break;
 	default:
 		break;
@@ -99,7 +122,7 @@ QStringList RectModel::getValue(int dataIndex)
 int RectModel::setValue(int dataIndex, int attrIndex, const QString &data)
 {
 	bool isNumber=false;
-	QRegExp reg("^([0-9])+(\\.([0-9])+)?$");
+	QRegExp reg("^(-)?([0-9])+(\\.([0-9])+)?$");
 	if(reg.indexIn(data)==0){
 		isNumber=true;
 	}
@@ -141,9 +164,9 @@ int RectModel::setValue(int dataIndex, int attrIndex, const QString &data)
 			case 0:
 				d=data.toDouble();
 				if(d>x+w){
-					maxW=d-x;
+					maxW=d-x+1;
 				}
-				w=d-x;
+				w=d-x+1;
 				emit updateData(this);
 				emit update();
 				break;
@@ -169,18 +192,18 @@ int RectModel::setValue(int dataIndex, int attrIndex, const QString &data)
 			case 0:
 				d=data.toDouble();
 				if(d>x+w){
-					maxW=d-x;
+					maxW=d-x+1;
 				}
-				w=d-x;
+				w=d-x+1;
 				emit updateData(this);
 				emit update();
 				break;
 			case 1:
 				d=data.toDouble();
 				if(d>y+h){
-					maxH=d-y;
+					maxH=d-y+1;
 				}
-				h=d-y;
+				h=d-y+1;
 				emit updateData(this);
 				emit update();
 				break;
@@ -206,9 +229,43 @@ int RectModel::setValue(int dataIndex, int attrIndex, const QString &data)
 			case 1:
 				d=data.toDouble();
 				if(d>y+h){
-					maxH=d-y;
+					maxH=d-y+1;
 				}
-				h=d-y;
+				h=d-y+1;
+				emit updateData(this);
+				emit update();
+				break;
+			default:
+				break;
+			}
+		}
+		break;
+	case 4:
+		if(isNumber){
+			switch (attrIndex) {
+			case 0:
+				d=data.toDouble();
+				if(d>w){
+					maxW=d;
+				}
+				w=d;
+				emit updateData(this);
+				emit update();
+				break;
+			default:
+				break;
+			}
+		}
+		break;
+	case 5:
+		if(isNumber){
+			switch (attrIndex) {
+			case 0:
+				d=data.toDouble();
+				if(d>h){
+					maxH=d;
+				}
+				h=d;
 				emit updateData(this);
 				emit update();
 				break;

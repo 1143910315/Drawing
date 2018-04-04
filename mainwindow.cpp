@@ -4,6 +4,7 @@
 #include <QVariant>
 #include <QItemSelectionModel>
 #include "model\voidmodel.h"
+#include "model/globalmodel.h"
 #include <qdebug.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -11,49 +12,38 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
-	//QString str="在我右边";
-	//QStringList current_cloud_id_list;
-	//current_cloud_id_list.push_back(str);
-	model = new PaintingListModel();
-	model->insertData(0,new VoidModel());
+	//列表的model初始化
+	model=new PaintingListModel();
+	dataModel=new DataListModel();
 	ui->listView->setModel(model);
-	//connect(ui->listView->selectionMode(),SIGNAL(s));
-	//ui->listView_2->setSelectionMode();
-	//ui->listView->setSelectionModel(new QItemSelectionModel());
-	//ui->listView_2->setSelectionModel(new QItemSelectionModel());
-	//connect(ui->listView,SIGNAL());
-
-
-	ui->listView_2->setModel(new QStringListModel());
-	ui->statusBar->showMessage("横坐标:0  纵坐标:0  缩放:1  宽度:0  高度:0  鼠标横坐标:0  鼠标纵坐标:0");
-	ui->graphicsView->setScene(&graphicsScene);
-	graphicsScene.setSceneRect(-1,-1,201,201);
-	//graphicsScene.addLine(0,0,200,200);
-	confine=new RectModel(-1,-1,201,201);
-	graphicsScene.addItem(confine);
+	ui->listView_2->setModel(dataModel);
+	//更新状态栏文本
+	emit statusTextNeedUpdate();
+	//屏幕管理类
+	QGraphicsScene *graphicsScene=new QGraphicsScene();
+	ui->graphicsView->setScene(graphicsScene);
+	GlobalModel *globalModel=new GlobalModel(graphicsScene);
+	model->insertData(0,globalModel);
+	connect(globalModel,SIGNAL(changeSceneRect()),this,SLOT(statusTextNeedUpdate()));
+	//设置鼠标移动监测
 	MainWindow::setMouseTracking(true);
 	ui->centralWidget->setMouseTracking(true);
 	ui->graphicsView->setMouseTracking(true);
+	//监控鼠标移动事件
 	QObject::connect(ui->graphicsView,SIGNAL(mouserMove(QMouseEvent*)),this,SLOT(receiveMouseMove(QMouseEvent*)));
+	//表格控件的表头初始化
 	QStringList header;
 	header<<tr("属性")<<tr("值");
 	ui->tableWidget->setHorizontalHeaderLabels(header);
+	//监测表格修改事件
 	connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
-	/*int rowCount=ui->tableWidget->rowCount();
-	ui->tableWidget->insertRow(rowCount);
-	ui->tableWidget->setItem(rowCount,0,new QTableWidgetItem("666"));
-	ui->tableWidget->setItem(rowCount,1,new QTableWidgetItem("777"));
-	rowCount=ui->tableWidget->rowCount();
-	ui->tableWidget->insertRow(rowCount);
-	ui->tableWidget->setItem(rowCount,0,new QTableWidgetItem("888"));
-	ui->tableWidget->setItem(rowCount,1,new QTableWidgetItem("999"));
-	*/
+	//监控画板缩放事件
+	connect(ui->graphicsView,SIGNAL(graphicsViewChangeScale()),this,SLOT(statusTextNeedUpdate()));
 }
 
 MainWindow::~MainWindow()
 {
 	delete ui;
-	delete confine;
 }
 /*
 void ::mouseMoveEvent(QMouseEvent *event)
@@ -97,21 +87,38 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::receiveMouseMove(QMouseEvent *event)
 {
-	QPointF point=ui->graphicsView->mapToScene(QPoint(event->x(),event->y()));
-	QString showMessage=
-			QString::asprintf("横坐标:0  ")+
-			QString::asprintf("纵坐标:0  ")+
-			QString::asprintf("缩放:1  ")+
-			QString::asprintf("宽度:0  ")+
-			QString::asprintf("高度:0  ")+
-			QString::asprintf("鼠标横坐标:%0.2f  ",point.x())+
-			QString::asprintf("鼠标纵坐标:%0.2f", point.y());
+	mousePoint=ui->graphicsView->mapToScene(QPoint(event->x(),event->y()));
+	emit statusTextNeedUpdate();
 	//ui->graphicsView->rotate(10);
 
 	//qDebug("Test2");
-	ui->statusBar->showMessage(showMessage);
+
 	//ui->statusBar->showMessage(QString::asprintf("%d %d", event->x(), event->y()));
 	QMainWindow::mouseMoveEvent(event);
+}
+
+void MainWindow::statusTextNeedUpdate()
+{
+	qreal mousePointX=0;
+	qreal mousePointY=0;
+	qreal sceneX=0;
+	qreal sceneY=0;
+	qreal sceneW=0;
+	qreal sceneH=0;
+	if(!mousePoint.isNull()){
+		mousePointX=mousePoint.x();
+		mousePointY=mousePoint.y();
+	}
+	model->getSceneRect(sceneX,sceneY,sceneW,sceneH);
+	QString showMessage=
+			QString::asprintf("横坐标:%0.2f  ",sceneX)+
+			QString::asprintf("纵坐标:%0.2f  ",sceneY)+
+			QString::asprintf("缩放:%0.2f  ",ui->graphicsView->matrix().m11())+
+			QString::asprintf("宽度:%0.2f  ",sceneW)+
+			QString::asprintf("高度:%0.2f  ",sceneH)+
+			QString::asprintf("鼠标横坐标:%0.2f  ",mousePointX)+
+			QString::asprintf("鼠标纵坐标:%0.2f",mousePointY);
+	ui->statusBar->showMessage(showMessage);
 }
 
 void MainWindow::cellChanged(int row, int column)
@@ -140,8 +147,8 @@ void MainWindow::on_pushButton_3_clicked()
 
 void MainWindow::on_pushButton_4_clicked()
 {
-	RectModel* rectmodel=new RectModel(0,0,50,50);
-	graphicsScene.addItem(rectmodel);
+	RectModel *rectmodel=new RectModel(0,0,50,50);
+//	graphicsScene.addItem(rectmodel);
 	model->insertData(model->rowCount(),rectmodel);
 	//ui->listWidget->insertItem(1,QList);
 }
@@ -198,8 +205,11 @@ void MainWindow::on_listView_indexesMoved(const QModelIndexList &indexes)
 	if(indexes.isEmpty()==false){
 		int row=indexes.first().row();
 		PaintingModel* p=model->getData(row);
-		QStringListModel * m=(QStringListModel*)ui->listView_2->model();
-		m->setStringList(p->getData());
+		dataModel->setPaintingModel(p);
+		//QStringListModel * m=(QStringListModel*)ui->listView_2->model();
+		//m->setStringList(p->getData());
+	}else{
+		dataModel->setPaintingModel();
 	}
 }
 
@@ -250,6 +260,7 @@ void MainWindow::on_listWidget_currentRowChanged(int currentRow)
 
 void MainWindow::on_listView_2_indexesMoved(const QModelIndexList &indexes)
 {
+	//qDebug("test 01");
 	if(indexes.isEmpty()==false){
 		int index=ui->listView->currentIndex().row();
 		int dataIndex=indexes.first().row();
@@ -258,6 +269,7 @@ void MainWindow::on_listView_2_indexesMoved(const QModelIndexList &indexes)
 		QStringList valueList=m->getValue(dataIndex);
 		disconnect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
 		ui->tableWidget->clearContents();
+		ui->tableWidget->setRowCount(0);
 		ui->tableWidget->setRowCount(attrList.count());
 		for(int i=0;i<attrList.count();i++){
 			QTableWidgetItem *item=new QTableWidgetItem(attrList.at(i));
@@ -266,6 +278,9 @@ void MainWindow::on_listView_2_indexesMoved(const QModelIndexList &indexes)
 			ui->tableWidget->setItem(i,1,new QTableWidgetItem(valueList.at(i)));
 		}
 		connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
+	}else{
+		ui->tableWidget->clearContents();
+		ui->tableWidget->setRowCount(0);
 	}
 }
 /*

@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QList>
 #include "model\paintingmodel.h"
+#include "model/globalmodel.h"
 class PaintingListModel : public QAbstractListModel
 {
 	Q_OBJECT
@@ -15,14 +16,12 @@ public:
 	void insertData(int index, PaintingModel *data);
 	void removeData(int index);
 	PaintingModel *getData(int index);
-	//bool setData(const QModelIndex &index, const QVariant &value, int role);
-	//bool insertRows(int row, int count, const QModelIndex &parent);
-	//bool removeRows(int row, int count, const QModelIndex &parent);
-	//bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
+	bool getSceneRect(qreal &x,qreal &y,qreal &w,qreal &h);
 public slots:
 	void updateData(PaintingModel* paintingModel);
 private:
 	QList<PaintingModel *> list;
+	GlobalModel *globalModel=NULL;
 };
 
 #endif // PAINTINGLISTMODEL_H
