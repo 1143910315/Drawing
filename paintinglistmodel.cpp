@@ -51,6 +51,7 @@ void PaintingListModel::insertData(int index, PaintingModel *data)
 {
 	beginInsertRows(QModelIndex(), index, index);
 	list.insert(index,data);
+	connect(data,SIGNAL(updateData(PaintingModel*)),this,SLOT(updateData(PaintingModel*)));
 	endInsertRows();
 }
 
@@ -66,10 +67,11 @@ PaintingModel *PaintingListModel::getData(int index)
 	return list.at(index);
 }
 
-
-
-
-
+void PaintingListModel::updateData(PaintingModel *paintingModel)
+{
+	int row=list.indexOf(paintingModel);
+	emit dataChanged(index(row,0),index(row,0));
+}
 
 
 

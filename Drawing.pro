@@ -24,22 +24,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    paintinglistmodel.cpp \
-    voidmodel.cpp \
+    model/globalmodel.cpp \
+    model/rectmodel.cpp \
+    model/voidmodel.cpp \
     graphicsview.cpp \
-    rectmodel.cpp \
-    selectablelistview.cpp
+    main.cpp \
+    mainwindow.cpp \
+    paintinglistmodel.cpp \
+    selectablelistview.cpp \
 
 HEADERS += \
-        mainwindow.h \
-    paintinglistmodel.h \
-    paintingmodel.h \
-    voidmodel.h \
+    model/globalmodel.h \
+    model/paintingmodel.h \
+    model/rectmodel.h \
+    model/voidmodel.h \
     graphicsview.h \
-    rectmodel.h \
-    selectablelistview.h
+    mainwindow.h \
+    paintinglistmodel.h \
+    selectablelistview.h \
 
 FORMS += \
         mainwindow.ui

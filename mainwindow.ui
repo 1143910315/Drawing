@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>340</height>
+    <width>596</width>
+    <height>346</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,58 +30,81 @@
          </widget>
         </item>
         <item>
-         <widget class="QListView" name="listView_2"/>
+         <widget class="SelectableListView" name="listView_2">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="3,1">
         <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>添加直线</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="text">
+             <string>添加直线</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_4">
+            <property name="text">
+             <string>添加矩形</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit">
+            <property name="toolTip">
+             <string>欲被添加的文本</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="toolTip">
+             <string>添加文本到列表框</string>
+            </property>
+            <property name="text">
+             <string>加入项目</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_2">
+            <property name="toolTip">
+             <string>欲被删除的项目的索引</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="toolTip">
+             <string>删除对应索引的项目</string>
+            </property>
+            <property name="text">
+             <string>删除项目</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_4">
-          <property name="text">
-           <string>添加矩形</string>
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="columnCount">
+           <number>2</number>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit">
-          <property name="toolTip">
-           <string>欲被添加的文本</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="toolTip">
-           <string>添加文本到列表框</string>
-          </property>
-          <property name="text">
-           <string>加入项目</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_2">
-          <property name="toolTip">
-           <string>欲被删除的项目的索引</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="toolTip">
-           <string>删除对应索引的项目</string>
-          </property>
-          <property name="text">
-           <string>删除项目</string>
-          </property>
+          <attribute name="horizontalHeaderCascadingSectionResizes">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>53</number>
+          </attribute>
+          <column/>
+          <column/>
          </widget>
         </item>
        </layout>
@@ -95,7 +118,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>596</width>
      <height>23</height>
     </rect>
    </property>

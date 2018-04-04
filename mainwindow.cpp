@@ -3,7 +3,7 @@
 
 #include <QVariant>
 #include <QItemSelectionModel>
-#include "voidmodel.h"
+#include "model\voidmodel.h"
 #include <qdebug.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 	//QString str="在我右边";
-	QStringList current_cloud_id_list;
+	//QStringList current_cloud_id_list;
 	//current_cloud_id_list.push_back(str);
 	model = new PaintingListModel();
 	model->insertData(0,new VoidModel());
@@ -35,8 +35,19 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->centralWidget->setMouseTracking(true);
 	ui->graphicsView->setMouseTracking(true);
 	QObject::connect(ui->graphicsView,SIGNAL(mouserMove(QMouseEvent*)),this,SLOT(receiveMouseMove(QMouseEvent*)));
-
-
+	QStringList header;
+	header<<tr("属性")<<tr("值");
+	ui->tableWidget->setHorizontalHeaderLabels(header);
+	connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
+	/*int rowCount=ui->tableWidget->rowCount();
+	ui->tableWidget->insertRow(rowCount);
+	ui->tableWidget->setItem(rowCount,0,new QTableWidgetItem("666"));
+	ui->tableWidget->setItem(rowCount,1,new QTableWidgetItem("777"));
+	rowCount=ui->tableWidget->rowCount();
+	ui->tableWidget->insertRow(rowCount);
+	ui->tableWidget->setItem(rowCount,0,new QTableWidgetItem("888"));
+	ui->tableWidget->setItem(rowCount,1,new QTableWidgetItem("999"));
+	*/
 }
 
 MainWindow::~MainWindow()
@@ -103,6 +114,25 @@ void MainWindow::receiveMouseMove(QMouseEvent *event)
 	QMainWindow::mouseMoveEvent(event);
 }
 
+void MainWindow::cellChanged(int row, int column)
+{
+	if(column==1){
+		int index=ui->listView->currentIndex().row();
+		int dataIndex=ui->listView_2->currentIndex().row();
+		PaintingModel *m=model->getData(index);
+		m->setValue(dataIndex,row,ui->tableWidget->item(row,column)->text());//更新属性数据
+		QStringList dataList=m->getData();//刷新列表数据
+		QStringList valueList=m->getValue(dataIndex);//刷新表格数据
+		for(int i=0;i<dataList.count();i++){
+			ui->listView_2->model()->setData(ui->listView_2->model()->index(i,0),QVariant(dataList.at(i)));
+		}
+		//ui->listView_2->model()->setData(ui->listView_2->currentIndex(),QVariant(dataList.at(ui->listView_2->currentIndex().row())));
+		disconnect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
+		ui->tableWidget->setItem(row,1,new QTableWidgetItem(valueList.at(row)));
+		connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
+	}
+}
+
 void MainWindow::on_pushButton_3_clicked()
 {
 
@@ -140,6 +170,7 @@ void MainWindow::on_listView_clicked(const QModelIndex &index)
 
 void MainWindow::on_listView_indexesMoved(const QModelIndexList &indexes)
 {
+	////这个槽用处不明，在本程序中重载了QListView的selectionChanged方法，发送信号到此槽
 	/*
 	QString string;
 	for(int i=0;i<indexes.count();i++){
@@ -201,3 +232,60 @@ void MainWindow::on_listWidget_currentRowChanged(int currentRow)
 }
 */
 
+
+
+
+//void MainWindow::on_tableWidget_itemSelectionChanged()
+//{
+//	////排序会使QTableWidget的Item的row()变化
+//	/*
+//	QString string;
+//	string.append(QString::asprintf("%d",ui->tableWidget->selectedItems().first()->row()));
+//	char*  ch;
+//	QByteArray ba = string.toLatin1(); // must
+//	ch=ba.data();
+//	qDebug(ch);
+//	*/
+//}
+
+void MainWindow::on_listView_2_indexesMoved(const QModelIndexList &indexes)
+{
+	if(indexes.isEmpty()==false){
+		int index=ui->listView->currentIndex().row();
+		int dataIndex=indexes.first().row();
+		PaintingModel *m=model->getData(index);
+		QStringList attrList=m->getAttribute(dataIndex);
+		QStringList valueList=m->getValue(dataIndex);
+		disconnect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
+		ui->tableWidget->clearContents();
+		ui->tableWidget->setRowCount(attrList.count());
+		for(int i=0;i<attrList.count();i++){
+			QTableWidgetItem *item=new QTableWidgetItem(attrList.at(i));
+			item->setFlags(Qt::ItemFlags::enum_type::ItemIsSelectable | Qt::ItemFlags::enum_type::ItemIsEnabled);
+			ui->tableWidget->setItem(i,0,item);
+			ui->tableWidget->setItem(i,1,new QTableWidgetItem(valueList.at(i)));
+		}
+		connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChanged(int,int)));
+	}
+}
+/*
+void MainWindow::on_tableWidget_cellChanged(int row, int column)
+{
+	QString string;
+	string.append(QString::asprintf("%d %d",row,column));
+	char*  ch;
+	QByteArray ba = string.toLatin1(); // must
+	ch=ba.data();
+	qDebug(ch);
+}
+
+void MainWindow::on_tableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
+{
+	QString string;
+	string.append(QString::asprintf("%d %d %d %d",currentRow,currentColumn,previousRow,previousColumn));
+	char*  ch;
+	QByteArray ba = string.toLatin1(); // must
+	ch=ba.data();
+	qDebug(ch);
+}
+*/

@@ -3,9 +3,10 @@
 
 #include <QAbstractListModel>
 #include <QList>
-#include "paintingmodel.h"
+#include "model\paintingmodel.h"
 class PaintingListModel : public QAbstractListModel
 {
+	Q_OBJECT
 public:
 	PaintingListModel();
 	int rowCount(const QModelIndex &parent= QModelIndex()) const;
@@ -18,6 +19,8 @@ public:
 	//bool insertRows(int row, int count, const QModelIndex &parent);
 	//bool removeRows(int row, int count, const QModelIndex &parent);
 	//bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
+public slots:
+	void updateData(PaintingModel* paintingModel);
 private:
 	QList<PaintingModel *> list;
 };
