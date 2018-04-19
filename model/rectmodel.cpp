@@ -361,6 +361,20 @@ QString RectModel::getErrorMessage(int errorCode)
 
 void RectModel::addBoundingRect(qreal newX, qreal newY, qreal newW, qreal newH)
 {
+	if(newW==0 || newH==0){
+		maxX=x;
+		maxY=y;
+		maxW=w;
+		maxH=h;
+		return;
+	}
+	if(w==0 || h==0){
+		maxX=newX;
+		maxY=newY;
+		maxW=newW;
+		maxH=newH;
+		return;
+	}
 	if(newX<x){
 		maxX=newX;
 	}else{
@@ -382,12 +396,3 @@ void RectModel::addBoundingRect(qreal newX, qreal newY, qreal newW, qreal newH)
 		maxH=y+h-maxY;
 	}
 }
-
-
-
-
-
-
-
-
-
