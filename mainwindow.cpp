@@ -5,6 +5,7 @@
 #include <QItemSelectionModel>
 #include "model\voidmodel.h"
 #include "model/globalmodel.h"
+#include "model/linemodel.h"
 #include <qdebug.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -127,7 +128,10 @@ void MainWindow::cellChanged(int row, int column)
 		int index=ui->listView->currentIndex().row();
 		int dataIndex=ui->listView_2->currentIndex().row();
 		PaintingModel *m=model->getData(index);
-		m->setValue(dataIndex,row,ui->tableWidget->item(row,column)->text());//更新属性数据
+		int errorCode=m->setValue(dataIndex,row,ui->tableWidget->item(row,column)->text());//更新属性数据
+		if(errorCode!=0){
+			ui->statusBar->showMessage(m->getErrorMessage(errorCode));
+		}
 		QStringList dataList=m->getData();//刷新列表数据
 		QStringList valueList=m->getValue(dataIndex);//刷新表格数据
 		for(int i=0;i<dataList.count();i++){
@@ -142,7 +146,8 @@ void MainWindow::cellChanged(int row, int column)
 
 void MainWindow::on_pushButton_3_clicked()
 {
-
+	LineModel *linemodel=new LineModel(0,0,50,50);
+	model->insertData(model->rowCount(),linemodel);
 }
 
 void MainWindow::on_pushButton_4_clicked()

@@ -32,7 +32,8 @@ SOURCES += \
     model/voidmodel.cpp \
     main.cpp \
     mainwindow.cpp \
-    listModel/datalistmodel.cpp
+    listModel/datalistmodel.cpp \
+    model/linemodel.cpp
 
 
 HEADERS += \
@@ -44,7 +45,8 @@ HEADERS += \
     model/rectmodel.h \
     model/voidmodel.h \
     mainwindow.h \
-    listModel/datalistmodel.h
+    listModel/datalistmodel.h \
+    model/linemodel.h
 
 
 FORMS += \

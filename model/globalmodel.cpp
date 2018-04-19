@@ -1,5 +1,4 @@
 #include "globalmodel.h"
-
 GlobalModel::GlobalModel(QGraphicsScene *scene):scene(scene)
 {
 	setSceneRect(0,0,200,200);
@@ -22,12 +21,20 @@ QString GlobalModel::getDescription()
 
 QRectF GlobalModel::boundingRect() const
 {
-	return QRectF(x-1,y-1,w+1,h+1);
+	return QRectF(x-10,y-10,w+20,h+20);
 }
 
 void GlobalModel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	painter->drawRect(x-1,y-1,w+2,h+2);
+	for(int i=0;i<10;i++){
+		painter->setPen(QPen(QColor(255-i*255/9,255-i*255/9,255-i*255/9)));
+		//painter->setBrush(QBrush(QColor(255/(10-i),255/(10-i),255/(10-i))));
+		//painter->drawRect(x-10+i,y-10+i,w+20-i*2,h+20-i*2);
+		painter->drawLine(x-10+i,y-10+i,x+w+10-i,y-10+i);
+		painter->drawLine(x+w+10-i,y-10+i,x+w+10-i,y+h+10-i);
+		painter->drawLine(x-10+i,y+h+10-i,x+w+10-i,y+h+10-i);
+		painter->drawLine(x-10+i,y-10+i,x-10+i,y+h+10-i);
+	}
 	//消除警告
 	(void)option;
 	(void)widget;
@@ -105,26 +112,36 @@ int GlobalModel::setValue(int dataIndex, int attrIndex, const QString &data)
 			default:
 				break;
 			}
+		}else{
+			return 1;
 		}
 		break;
 	case 1:
-		if(isNumber){
-			switch (attrIndex) {
-			case 0:
+		switch (attrIndex) {
+		case 0:
+			if(isNumber){
 				w=data.toDouble();
 				setSceneRect(x,y,w,h);
 				emit updateData(this);
 				emit update();
-				break;
-			case 1:
+			}else{
+				return 1;
+			}
+			break;
+		case 1:
+			if(isNumber){
 				h=data.toDouble();
 				setSceneRect(x,y,w,h);
 				emit updateData(this);
 				emit update();
-				break;
-			default:
-				break;
+			}else{
+				return 1;
 			}
+			break;
+		case 2:
+			return 2;
+		default:
+			break;
 		}
 		break;
 	default:
@@ -135,7 +152,16 @@ int GlobalModel::setValue(int dataIndex, int attrIndex, const QString &data)
 
 QString GlobalModel::getErrorMessage(int errorCode)
 {
-	(void)errorCode;
+	switch (errorCode) {
+	case 1:
+		return tr("请输入数字。");
+		break;
+	case 2:
+		return tr("不可修改！只读属性！");
+		break;
+	default:
+		break;
+	}
 	return QString();
 }
 

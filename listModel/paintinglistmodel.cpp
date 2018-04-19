@@ -66,7 +66,11 @@ void PaintingListModel::removeData(int index)
 {
 	beginRemoveRows(QModelIndex(),index,index);
 	PaintingModel *m=list.at(index);
-	globalModel->removeItem(m);//TODO !多屏幕情况下，可能会有泄漏
+	if(m==globalModel){
+		globalModel=NULL;
+	}else{
+		globalModel->removeItem(m);//TODO !多屏幕情况下，可能会有泄漏
+	}
 	list.removeAt(index);
 	delete m;
 	endRemoveRows();
