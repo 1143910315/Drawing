@@ -21,7 +21,8 @@ public:
 private:
 	qreal x=0;
 	qreal y=0;
-	qreal r=0;
+	qreal w=0;
+	qreal h=0;
 	qreal maxX=0;
 	qreal maxY=0;
 	qreal maxW=0;

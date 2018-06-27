@@ -1,9 +1,9 @@
 #include "circlemodel.h"
 #include <QRegExp>
 #include <qdebug.h>
-CircleModel::CircleModel(qreal x, qreal y, qreal r):x(x),y(y),r(r)
+CircleModel::CircleModel(qreal x, qreal y, qreal r):x(x),y(y),w(r*2),h(r*2)
 {
-	addBoundingRect(x-r,y-r,x+r,y+r);
+	addBoundingRect(x,y,r*2,r*2);
 }
 
 CircleModel::~CircleModel()
@@ -29,6 +29,7 @@ QRectF CircleModel::boundingRect() const
 
 void CircleModel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+	painter->drawEllipse(x,y,w,h);
 	//消除警告
 	(void)option;
 	(void)widget;

@@ -28,6 +28,8 @@ private slots:
 	void on_pushButton_4_clicked();
 	void on_listView_indexesMoved(const QModelIndexList &indexes);
 	void on_listView_2_indexesMoved(const QModelIndexList &indexes);
+	void on_pushButton_5_clicked();
+
 private:
 	Ui::MainWindow *ui;
 	PaintingListModel *model=NULL;
