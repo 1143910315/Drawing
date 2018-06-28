@@ -8,6 +8,7 @@ class CircleModel : public PaintingModel
 	Q_OBJECT
 public:
 	CircleModel(qreal x,qreal y,qreal r);
+	CircleModel(qreal x,qreal y,qreal w,qreal h);
 	~CircleModel();
 	int getType();
 	QString getDescription();

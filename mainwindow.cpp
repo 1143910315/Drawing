@@ -6,6 +6,7 @@
 #include "model\voidmodel.h"
 #include "model/globalmodel.h"
 #include "model/linemodel.h"
+#include "model/circlemodel.h"
 #include <qdebug.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -312,5 +313,6 @@ void MainWindow::on_tableWidget_currentCellChanged(int currentRow, int currentCo
 
 void MainWindow::on_pushButton_5_clicked()
 {
-
+	CircleModel *circlemodel=new CircleModel(0,0,50,50);
+	model->insertData(model->rowCount(),circlemodel);
 }
